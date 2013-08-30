@@ -5,7 +5,8 @@ module TorqueBox
     CONFIG_OPTIONS_TO_STRIP = [:config_file, :daemon, :environment, :pidfile, :require, :tag]
 
     def initialize(opts = {})
-      @config = opts.symbolize_keys.reject { |k, _| CONFIG_OPTIONS_TO_STRIP.include?(k) }
+      @config = Hash[opts.map{|k,v| [:"#{k}",v] }].
+        reject { |k, _| CONFIG_OPTIONS_TO_STRIP.include?(k) }
       @mutex = Mutex.new
     end
 
