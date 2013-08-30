@@ -1,3 +1,5 @@
+require File.expand_path('../../torquebox-sidekiq-service', __FILE__)
+
 module TorqueBox
   class SidekiqService
     attr_accessor :config, :launcher, :start_failed
