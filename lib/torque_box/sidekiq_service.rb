@@ -7,8 +7,10 @@ module TorqueBox
     CONFIG_OPTIONS_TO_STRIP = [:config_file, :daemon, :environment, :pidfile, :require, :tag]
 
     def initialize(opts = {})
-      @config = Hash[opts.map{|k,v| [:"#{k}",v] }].
-        reject { |k, _| CONFIG_OPTIONS_TO_STRIP.include?(k) }
+      opts =  Hash[opts.map{|k,v| [:"#{k}",v] }]
+      setup_redis(opts.delete(:redis))
+
+      @config = opts.reject { |k, _| CONFIG_OPTIONS_TO_STRIP.include?(k) }
       @mutex = Mutex.new
     end
 
@@ -45,6 +47,12 @@ module TorqueBox
       puts e.backtrace
 
       @start_failed = true
+    end
+
+  private
+
+    def setup_redis(opts)
+      Sidekiq.redis = Hash[opts.map{|k,v| [:"#{k}",v] }] if opts
     end
   end
 end
